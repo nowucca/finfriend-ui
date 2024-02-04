@@ -3,19 +3,19 @@ import traceback
 from typing import List, Dict, AsyncGenerator
 
 import openai
-from openai.error import OpenAIError
+from openai import AsyncOpenAI
 
 from dotenv import load_dotenv
+from openai import OpenAIError, OpenAI
 
 # Load .env file
 load_dotenv()
 
-# Read environment variables
-openai_model = os.getenv('OPENAI_API_MODEL')
-openai.api_key = os.getenv('OPENAI_API_KEY')
-openai.api_base = os.getenv('OPENAI_API_BASE_URL')
 
-print(f"openai_model: {openai_model} openai.api_key: {openai.api_key} openai.api_base: {openai.api_base}")
+openai_model = os.getenv('OPENAI_API_MODEL')
+
+print(
+    f"openai_model: {openai_model} openai.api_key: {os.getenv('OPENAI_API_KEY')} openai.api_base: {os.getenv('OPENAI_API_BASE_URL')}")
 
 
 async def converse(messages: List[Dict[str, str]]) -> AsyncGenerator[str, None]:
@@ -28,20 +28,20 @@ async def converse(messages: List[Dict[str, str]]) -> AsyncGenerator[str, None]:
 
     :return: a generator of delta string responses
     """
+    aclient = AsyncOpenAI(api_key=os.getenv('OPENAI_API_KEY'),
+                          base_url=os.getenv('OPENAI_API_BASE_URL'))
     try:
-        async for chunk in await openai.ChatCompletion.acreate(
-                model=openai_model,
-                messages=messages,
-                max_tokens=1600,
-                stream=True
-        ):
-            content = chunk['choices'][0]['delta'].get('content', '')
+        async for chunk in await aclient.chat.completions.create(model=openai_model,
+                                                                 messages=messages,
+                                                                 max_tokens=1600,
+                                                                 stream=True):
+            content = chunk.choices[0].delta.content
             if content:
                 yield content
 
     except OpenAIError as e:
         traceback.print_exc()
-        yield f"EXCEPTION {str(e)}"
+        yield f"oaiEXCEPTION {str(e)}"
     except Exception as e:
         yield f"EXCEPTION {str(e)}"
 
