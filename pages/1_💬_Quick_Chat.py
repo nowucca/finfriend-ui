@@ -1,7 +1,7 @@
 import streamlit as st
 
 from services import prompts
-from helpers import util
+from ui.interactions import chat_handler
 
 st.set_page_config(
     page_title="Quick Chat",
@@ -9,10 +9,10 @@ st.set_page_config(
     layout="wide"
 )
 
-import helpers.sidebar
+import ui.components.sidebar
 import asyncio
 
-helpers.sidebar.show()
+ui.components.sidebar.show()
 
 st.header("Quick Chat")
 st.write("Get instant answers to your (not too) specific finance questions.")
@@ -38,7 +38,7 @@ async def chat(messages):
     with st.chat_message("assistant"):
         message_placeholder = st.empty()
 
-        messages = await util.run_conversation(messages, message_placeholder)
+        messages = await chat_handler.run_conversation(messages, message_placeholder)
         st.session_state.messages = messages
     return messages
 

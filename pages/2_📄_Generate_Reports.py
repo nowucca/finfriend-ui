@@ -12,13 +12,12 @@ import os
 import pathlib
 from os.path import isfile, join
 import pandas as pd
-import helpers.sidebar
-import helpers.util
+import ui.components.sidebar
+from ui.interactions import chat_handler
 import services.prompts
 import services.llm
-import helpers.util
 
-helpers.sidebar.show()
+ui.components.sidebar.show()
 
 st.header("Generate Reports")
 st.write("Create tailored financial documents, based on sample datasets.  Choose your sample dataset and generate "
@@ -116,7 +115,7 @@ if generate_button_sb:
                 st.write("\nMost 3 spendy categories by transaction count:")
                 st.write(most_spendy_categories_by_count)
 
-            asyncio.run(helpers.util.run_prompt(category_summary_advice_prompt, advice))
+            asyncio.run(chat_handler.run_prompt(category_summary_advice_prompt, advice))
 
     elif document_type == "Spending by Tag":
         # Calculate spending by tag
@@ -137,4 +136,4 @@ if generate_button_sb:
             # Streamlit app
             st.write("\nTop 3 most spendy accounts by amount of money:")
             st.write(top_spendy_accounts)
-        asyncio.run(helpers.util.run_prompt(tag_summary_advice_prompt, advice))
+        asyncio.run(chat_handler.run_prompt(tag_summary_advice_prompt, advice))

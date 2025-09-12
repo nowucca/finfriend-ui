@@ -11,6 +11,7 @@ dependencies = [
     "python-dotenv",
     "toml",
     "tabulate",
+    "httpx",
 ]
 
 [build-system]
@@ -18,7 +19,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
-packages = ["helpers", "services", "pages"]
+packages = ["ui", "services", "pages"]
 include = [
     "🏠_FinFriend.py",
     "data/*",

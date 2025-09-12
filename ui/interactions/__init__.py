@@ -1,0 +1,1 @@
+# UI interactions for FinFriend
