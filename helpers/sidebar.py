@@ -18,5 +18,5 @@ def show() -> None:
 		reload_button = st.button("↪︎  Reload Page")
 		if reload_button:
 			st.session_state.clear()
-			st.experimental_rerun()
+			st.rerun()
 
